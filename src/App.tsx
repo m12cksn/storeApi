@@ -27,9 +27,10 @@ function App() {
     return !!localStorage.getItem("token");
   });
   const [username, setUsername] = useState<string>(() => {
-    return localStorage.getItem("username");
+    if (typeof window === "undefined") return "";
+    return localStorage.getItem("username") ?? "";
   });
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState<"light" | "dark">("light");
 
   const fetchProducts = async (category: string) => {
     setLoading(true);
@@ -104,22 +105,22 @@ function App() {
   }, []);
 
   useEffect(() => {
-    let html = document.documentElement;
+    const html = document.documentElement;
     html.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
-  });
+  }, [theme]);
 
   useEffect(() => {
-    let saveTheme = localStorage.getItem("theme");
-    let systemPrefersColor = window.matchMedia(
+    const saveTheme = localStorage.getItem("theme");
+    const systemPrefersDark = window.matchMedia(
       "(prefers-color-scheme: dark)"
     ).matches;
     if (saveTheme) {
       setTheme(saveTheme);
-    } else if (systemPrefersColor) {
+    } else if (systemPrefersDark) {
       setTheme("dark");
     }
-  });
+  }, []); // run once
 
   const toggle = () => {
     setTheme(theme === "light" ? "dark" : "light");
