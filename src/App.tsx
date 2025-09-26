@@ -26,9 +26,8 @@ function App() {
   const [isLogin, setIsLogin] = useState<boolean>(() => {
     return !!localStorage.getItem("token");
   });
-  const [username, setUsername] = useState<string>(() => {
-    if (typeof window === "undefined") return "";
-    return localStorage.getItem("username") ?? "";
+  const [username] = useState<string>(() => {
+    return localStorage.getItem("username") || "";
   });
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
@@ -116,7 +115,7 @@ function App() {
       "(prefers-color-scheme: dark)"
     ).matches;
     if (saveTheme) {
-      setTheme(saveTheme);
+      setTheme(saveTheme as "light" | "dark");
     } else if (systemPrefersDark) {
       setTheme("dark");
     }
